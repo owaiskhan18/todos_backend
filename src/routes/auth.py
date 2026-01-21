@@ -11,9 +11,19 @@ from ..services.user_service import UserService
 
 router = APIRouter()
 
+from pydantic import Field, validator
+
 class UserCreate(SQLModel):
     email: str
-    password: str
+    password: str = Field(..., max_length=72) # Added max_length for initial validation
+
+    @validator("password")
+    def password_length(cls, v):
+        # Passlib (bcrypt) has a 72-byte limit for passwords.
+        # Ensure that the password, when encoded to UTF-8, does not exceed this limit.
+        if len(v.encode('utf-8')) > 72:
+            raise ValueError("Password cannot be longer than 72 bytes")
+        return v
 
 @router.post("/signup", response_model=dict)
 def register_user(
