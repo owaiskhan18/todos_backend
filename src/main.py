@@ -23,7 +23,7 @@ app = FastAPI(lifespan=lifespan)
 origins = [
     "http://localhost",
     "http://localhost:3000", # Frontend URL
-    https://todos-umber.vercel.app
+    "https://todos-umber.vercel.app"
 ]
 
 app.add_middleware(
